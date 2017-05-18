@@ -3,7 +3,7 @@ $(function () {
     var shell = require('shell');
     var fs = require('fs');
 
-    function extractChordsObjects(song) {
+    function extractChordObjects(song) {
 
         function buildChordObject(lineArray) {
             return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": lineArray[2] };
@@ -30,16 +30,18 @@ $(function () {
         return arrayOfChordObjects;
     };
 
-    fs.readFile(__dirname + '/input.sng', 'binary', function (err, contents) {
-        if (err) { return console.log(err); }
-
-        var totalOutput = contents;
+    function displayData(fileData) {
         var chords = "";
-        extractChordsObjects(contents).forEach(function (el) { // only for output
+        extractChordObjects(fileData).forEach(function (el) { // only for output
             chords += JSON.stringify(el) + '<br>';
         });
 
         $('#partial-output').html(chords);
-        $('#total-output').html(totalOutput.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        $('#total-output').html(fileData.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+    }
+
+    fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
+        if (err) { return console.log(err); }
+        displayData(fileData)
     });
 });
