@@ -3,6 +3,8 @@ $(function () {
     var shell = require('shell');
     var fs = require('fs');
 
+    var chordObjects = [];
+
     function extractChordObjects(song) {
 
         function buildChordObject(lineArray) {
@@ -31,17 +33,22 @@ $(function () {
     };
 
     function displayData(fileData) {
-        var chords = "";
-        extractChordObjects(fileData).forEach(function (el) { // only for output
-            chords += JSON.stringify(el) + '<br>';
-        });
 
-        $('#partial-output').html(chords);
+        function displayChordObjects(chordObjects) {
+            var chords = "";
+            chordObjects.forEach(function (el) { // only for output
+                chords += JSON.stringify(el) + '<br>';
+            });
+            $('#partial-output').html(chords);
+        }
+
+        displayChordObjects(chordObjects)
         $('#total-output').html(fileData.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
     fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
         if (err) { return console.log(err); }
+        chordObjects = extractChordObjects(fileData);
         displayData(fileData)
     });
 });
