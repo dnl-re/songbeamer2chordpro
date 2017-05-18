@@ -15,13 +15,23 @@ $(function(){
     var shell = require('shell');
     var fs = require('fs');
 
+
+
+    function extractChords(song) {
+        var guitarChords = "" + /(#Chord).+/g.exec(song);
+        guitarChords = guitarChords.replace(/(#Chords=)/g,'');
+        guitarChords = guitarChords.replace(/(,#Chord)/g,'');
+        return new Buffer(guitarChords, 'base64').toString('utf8');
+    };
+
     fs.readFile(__dirname + '/input.sng', 'binary', function(err, contents){
-        var output = contents;
         if (err) { return console.log(err); }
+        var totalOutput = contents;
+        var chords = extractChords(contents);
         
         
-        
-        $('#output').html(output.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        $('#partial-output').html(chords);
+        $('#total-output').html(totalOutput.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     });
 
 
