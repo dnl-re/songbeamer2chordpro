@@ -16,16 +16,14 @@ $(function(){
     var fs = require('fs');
 
     fs.readFile(__dirname + '/input.sng', 'binary', function(err, contents){
-        if (err) {
-            return console.log(err);
-        }
-
-        // var withBRs = $('#brText').html();
-        // var textWithBreaks = withBRs.replace(/\<br\>/gi,'\r');
-
-        console.log(contents);
-        $('#output').html(contents.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        var output = contents;
+        if (err) { return console.log(err); }
+        
+        
+        
+        $('#output').html(output.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     });
+
 
 
 
