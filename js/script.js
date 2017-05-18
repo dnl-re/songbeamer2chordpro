@@ -4,18 +4,16 @@ $(function(){
     var fs = require('fs');
 
     function extractChords(song) {
+        
+        function buildChordObject(lineArray){
+            return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": lineArray[2] };
+        }
 
         function writeChordsIntoArray(rawChords) {
             var linesArray = [];
             var lines = rawChords.split('\r');
             lines.forEach(function(line){
-                var lineArray = line.split(',');
-                var chordObject = {
-                    "charPosition": lineArray[0],
-                    "lineNumber": lineArray[1],
-                    "chord": lineArray[2]
-                };
-                linesArray.push(chordObject)
+                linesArray.push(buildChordObject(line.split(',')));
             });
             return linesArray;
         }
