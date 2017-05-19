@@ -45,9 +45,11 @@ $(function () {
             return songPartObjects;
         }
 
-        song = song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---');
-        song = song.split('---');
-        song = song.splice(1);
+        function getSongPartsArray(song) {
+            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(1);
+        }
+
+        song = getSongPartsArray(song);
         return buildSongPartsObect(song);
     }
 
