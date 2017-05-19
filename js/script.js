@@ -22,11 +22,18 @@ $(function () {
                 return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
             };
 
-            var lines = metaDataStringRaw.match(/#.*/g)
-            var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
-            var metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
-            var metaDataObject = JSON.parse(metaDataString);
-            metaDataObject.Chords = new Buffer(metaDataObject.Chords, 'base64').toString('utf8')
+            function buildParseableMetaDataString(metaDataStringRaw) {
+                var lines = metaDataStringRaw.match(/#.*/g)
+                var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
+                return metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
+            }
+
+            function convertBase64ChordsInto(encoding) {
+                metaDataObject.Chords = new Buffer(metaDataObject.Chords, 'base64').toString(encoding)
+            }
+
+            var metaDataObject = JSON.parse(buildParseableMetaDataString(metaDataStringRaw));
+            convertBase64ChordsInto('utf8');
             return metaDataObject;
         }
 
