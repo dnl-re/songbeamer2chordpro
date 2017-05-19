@@ -23,7 +23,9 @@ $(function () {
             var lines = metaDataStringRaw.match(/#.*/g)
             var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
             var metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
-            return JSON.parse(metaDataString);
+            var metaDataObject = JSON.parse(metaDataString);
+            metaDataObject.Chords = new Buffer(metaDataObject.Chords, 'base64').toString('utf8')
+            return metaDataObject;
         }
 
         return buildMetaDataObject(getMetaDataPart(song));;
@@ -44,16 +46,7 @@ $(function () {
             return linesArray;
         }
 
-        function extractSongBeamerChords(song) {
-            var guitarChords = "" + /(#Chord).+/g.exec(song);
-            guitarChords = guitarChords.replace(/(#Chords=)/g, '');
-            guitarChords = guitarChords.replace(/(,#Chord)/g, '');
-            return new Buffer(guitarChords, 'base64').toString('utf8');
-        }
-
-        var songBeamerChords = extractSongBeamerChords(song);
-        var arrayOfChordObjects = writeChordsIntoArray(songBeamerChords);
-        return arrayOfChordObjects;
+        return writeChordsIntoArray(metaData.Chords);
     };
 
     function extractSongPartObjects(song) {
@@ -87,9 +80,9 @@ $(function () {
             $('#partial-output').html(returnString);
         }
 
-        // displayArrayOfObjects(chordObjects);
+        displayArrayOfObjects(chordObjects);
         // displayArrayOfObjects(songPartObjects);
-        displayArrayOfObjects([metaData]);
+        // displayArrayOfObjects([metaData]);
         $('#total-output').html(fileData.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
