@@ -94,24 +94,16 @@ $(function () {
 
     function displayData(fileData) {
 
-        function displayChordObjects() {
-            var chords = "";
-            chordObjects.forEach(function (el) {
-                chords += JSON.stringify(el) + '<br>';
+        function displayArrayOfObjects(array) {
+            var returnString = "";
+            array.forEach(function (el) {
+                returnString += JSON.stringify(el) + '<br>';
             });
-            $('#partial-output').html(chords);
+            $('#partial-output').html(returnString);
         }
 
-        function displaySongPartObjects() {
-            var chords = "";
-            songPartObjects.forEach(function (el) {
-                chords += JSON.stringify(el) + '<br>';
-            });
-            $('#partial-output').html(chords);
-        }
-
-        // displayChordObjects(chordObjects);
-        displaySongPartObjects(songPartObjects);
+        // displayArrayOfObjects(chordObjects);
+        displayArrayOfObjects(songPartObjects);
         $('#total-output').html(fileData.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
