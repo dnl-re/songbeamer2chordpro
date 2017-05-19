@@ -7,6 +7,28 @@ $(function () {
     var songPartObjects = [];
     var metaData = [];
 
+    function extractMetaData(song) {
+
+        function getMetaDataPart(song) {
+            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0, 1).toString();
+        }
+
+        function buildMetaDataObject(metaDataStringRaw) {
+
+            function buildStringFromMetaDataLine(line) {
+                var lineArray = line.replace('#', '').split('=');
+                return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
+            };
+
+            var lines = metaDataStringRaw.match(/#.*/g)
+            var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
+            var metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
+            return JSON.parse(metaDataString);
+        }
+
+        return buildMetaDataObject(getMetaDataPart(song));;
+    }
+
     function extractChordObjects(song) {
 
         function buildChordObject(lineArray) {
@@ -55,28 +77,6 @@ $(function () {
         return buildSongPartsObect(song);
     }
 
-    function extractMetaData(song) {
-
-        function getMetaDataPart(song) {
-            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0, 1).toString();
-        }
-
-        function buildMetaDataObject(metaDataStringRaw) {
-
-            function buildStringFromMetaDataLine(line) {
-                var lineArray = line.replace('#', '').split('=');
-                return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
-            };
-
-            var lines = metaDataStringRaw.match(/#.*/g)
-            var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
-            var metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
-            return JSON.parse(metaDataString);
-        }
-
-        return buildMetaDataObject(getMetaDataPart(song));;
-    }
-
     function displayData(fileData) {
 
         function displayArrayOfObjects(array) {
@@ -95,9 +95,9 @@ $(function () {
 
     fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
         if (err) { return console.log(err); }
+        metaData = extractMetaData(fileData);
         chordObjects = extractChordObjects(fileData);
         songPartObjects = extractSongPartObjects(fileData);
-        metaData = extractMetaData(fileData);
         displayData(fileData);
     });
 });
