@@ -53,24 +53,23 @@ $(function () {
 
     function extractSongPartObjects(song) {
 
-        function buildSongPartObect(part) {
+        function buildSongPartObject(songPart) {
             var songPartObject = {}
             var numberOfLanguages = parseInt(metaData.LangCount);
-            var languages = [];
-            var lines = part.match(/.*\r/g);
-            for (i = 0; i < numberOfLanguages; i++) {
+            var totalLines = songPart.match(/.*\r/g);
+            for (var langNr = 0; langNr < numberOfLanguages; langNr++) {
                 var singleLanguageLines = [];
-                for (j = i; j < lines.length; j += numberOfLanguages) {
-                    singleLanguageLines.push(lines[j]);
+                for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
+                    singleLanguageLines.push(totalLines[lineNr]);
                 }
-                songPartObject["language" + (i + 1)] = singleLanguageLines.toString();
+                songPartObject["language" + (langNr + 1)] = singleLanguageLines.toString();
             }
             return songPartObject;
         }
 
         function buildSongPartsObect(song) {
             var songPartObjects = [];
-            song.forEach(part => songPartObjects.push(buildSongPartObect(part)));
+            song.forEach(part => songPartObjects.push(buildSongPartObject(part)));
             return songPartObjects;
         }
 
