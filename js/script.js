@@ -4,7 +4,8 @@ $(function () {
     var fs = require('fs');
 
     var chordObjects = [];
-    var songPartObjects = [{ a: "1" }, { b: "2" }];
+    var songPartObjects = [];
+    var metaData = [];
 
     function extractChordObjects(song) {
 
@@ -36,6 +37,7 @@ $(function () {
     function extractSongPartObjects(song) {
 
         function buildSongPartObect(part) {
+            var languages = [];
             return { part: part };
         }
 
@@ -51,6 +53,17 @@ $(function () {
 
         song = getSongPartsArray(song);
         return buildSongPartsObect(song);
+    }
+
+    function extractMetaData(song) {
+
+        function getMetaDataPart(song) {
+            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0,1).toString();
+        }
+        
+        var returnValue = getMetaDataPart(song)
+        console.log(returnValue);
+        return returnValue;
     }
 
     function displayData(fileData) {
@@ -69,7 +82,6 @@ $(function () {
                 chords += JSON.stringify(el) + '<br>';
             });
             $('#partial-output').html(chords);
-            console.log(songPartObjects);
         }
 
         // displayChordObjects(chordObjects);
@@ -81,6 +93,7 @@ $(function () {
         if (err) { return console.log(err); }
         chordObjects = extractChordObjects(fileData);
         songPartObjects = extractSongPartObjects(fileData);
+        metaData = extractMetaData(fileData);
         displayData(fileData);
     });
 });
