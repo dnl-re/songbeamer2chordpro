@@ -103,7 +103,8 @@ $(function () {
         }
 
         // displayArrayOfObjects(chordObjects);
-        displayArrayOfObjects(songPartObjects);
+        // displayArrayOfObjects(songPartObjects);
+        displayArrayOfObjects([metaData]);
         $('#total-output').html(fileData.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
