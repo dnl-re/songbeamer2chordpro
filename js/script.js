@@ -58,11 +58,25 @@ $(function () {
     function extractMetaData(song) {
 
         function getMetaDataPart(song) {
-            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0,1).toString();
+            return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0, 1).toString();
         }
-        
+
+        function writeMetaDataIntoArray(metaDataPart) {
+            var lines = metaDataPart.match(/#.*/g)
+            var metaDataObjectsArray = lines.map(line => {
+                var metaDatum = line.replace('#', '').split('=');
+                var metaDatumObject = {};
+                metaDatumObject['' + metaDatum[0]] = metaDatum[1];
+                return metaDatumObject;
+            });
+
+            console.log(metaDataObjectsArray);
+            // return lines;
+        }
+
         var returnValue = getMetaDataPart(song)
-        console.log(returnValue);
+        writeMetaDataIntoArray(returnValue);
+        // console.log(returnValue);
         return returnValue;
     }
 
