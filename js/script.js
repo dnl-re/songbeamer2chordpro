@@ -7,7 +7,7 @@ $(function () {
     var chordObjects = [];
     var songPartObjects = [];
     var metaData = [];
-    var measurePerformance = true;
+    var measurePerformance = false;
 
     function extractMetaData(song) {
 
@@ -54,7 +54,19 @@ $(function () {
     function extractSongPartObjects(song) {
 
         function buildSongPartObect(part) {
+            var numberOfLanguages = parseInt(metaData.LangCount);
             var languages = [];
+            
+            var lines = part.match(/.*\r/g);
+            for (i = 0; i < numberOfLanguages; i++) {
+                var singleLanguageLines = [];
+                for (j = i; j < lines.length; j+= numberOfLanguages) {
+                    singleLanguageLines.push(lines[j]);
+                }
+                languages[i] = singleLanguageLines;
+            }
+            console.log(languages);
+            
             return { part: part };
         }
 
