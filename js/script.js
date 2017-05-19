@@ -61,35 +61,20 @@ $(function () {
             return song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(0, 1).toString();
         }
 
-        function writeMetaDataIntoArray(metaDataPart) {
-            var lines = metaDataPart.match(/#.*/g)
-            var metaDataObjectsArray = lines.map(line => {
-                var metaDatum = line.replace('#', '').split('=');
-                var metaDatumObject = {};
-                metaDatumObject['' + metaDatum[0]] = metaDatum[1];
-                return metaDatumObject;
-            });
+        function buildMetaDataObject(metaDataStringRaw) {
 
-            console.log(metaDataObjectsArray);
-            // return lines;
-        }
-
-        function buildMetaDataObject(metaDataPart) {
-            var lines = metaDataPart.match(/#.*/g)
-            var metaDataObjectsArray = lines.map(line => {
+            function buildStringFromMetaDataLine(line) {
                 var lineArray = line.replace('#', '').split('=');
                 return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
-                });
-            var metaDataPart = metaDataObjectsArray.toString();
-            metaDataPart = '{' + metaDataPart + '}';
-            return JSON.parse(metaDataPart);
+            };
+
+            var lines = metaDataStringRaw.match(/#.*/g)
+            var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
+            var metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
+            return JSON.parse(metaDataString);
         }
 
-        var returnValue = getMetaDataPart(song)
-        returnValue = buildMetaDataObject(returnValue);
-        // writeMetaDataIntoArray(returnValue);
-        console.log(returnValue);
-        return returnValue;
+        return buildMetaDataObject(getMetaDataPart(song));;
     }
 
     function displayData(fileData) {
