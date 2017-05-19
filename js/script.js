@@ -74,9 +74,21 @@ $(function () {
             // return lines;
         }
 
+        function buildMetaDataObject(metaDataPart) {
+            var lines = metaDataPart.match(/#.*/g)
+            var metaDataObjectsArray = lines.map(line => {
+                var lineArray = line.replace('#', '').split('=');
+                return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
+                });
+            var metaDataPart = metaDataObjectsArray.toString();
+            metaDataPart = '{' + metaDataPart + '}';
+            return JSON.parse(metaDataPart);
+        }
+
         var returnValue = getMetaDataPart(song)
-        writeMetaDataIntoArray(returnValue);
-        // console.log(returnValue);
+        returnValue = buildMetaDataObject(returnValue);
+        // writeMetaDataIntoArray(returnValue);
+        console.log(returnValue);
         return returnValue;
     }
 
