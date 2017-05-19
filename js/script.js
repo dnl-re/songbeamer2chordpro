@@ -34,9 +34,21 @@ $(function () {
     };
 
     function extractSongPartObjects(song) {
+
+        function buildSongPartObect(part) {
+            return { part: part };
+        }
+
+        function buildSongPartsObect(song) {
+            var songPartObjects = [];
+            song.forEach(part => songPartObjects.push(buildSongPartObect(part)));
+            return songPartObjects;
+        }
+
         song = song.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---');
         song = song.split('---');
-        return songPartObjects = song.splice(1);
+        song = song.splice(1);
+        return buildSongPartsObect(song);
     }
 
     function displayData(fileData) {
