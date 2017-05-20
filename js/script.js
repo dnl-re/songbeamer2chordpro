@@ -5,7 +5,7 @@ $(function () {
 
     var rawFile = "";
     var chordObjects = [];
-    var songTextObject = [];
+    var songText = [];
     var metaData = [];
     var measurePerformance = false;
 
@@ -113,7 +113,7 @@ $(function () {
             $('#partial-output').html(returnString);
         }
 
-        displayArrayOfObjects([songTextObject]);
+        displayArrayOfObjects([songText]);
         // displayArrayOfObjects([metaData]);
         $('#total-output').html(rawFile);
     }
@@ -136,11 +136,11 @@ $(function () {
         if (err) { return console.log(err); }
         rawFile = fileData;
         metaData = extractMetaData(fileData);
-        songTextObject = extractSongTextObject(fileData);
+        songText = extractSongTextObject(fileData);
         if (measurePerformance) {
             metaData = measurePerformanceOfFunction(extractMetaData, fileData);
             chordObjects = measurePerformanceOfFunction(extractChordObjects, fileData);
-            songTextObject = measurePerformanceOfFunction(extractSongTextObject, fileData);
+            songText = measurePerformanceOfFunction(extractSongTextObject, fileData);
         }
         displayData();
     });
