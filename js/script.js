@@ -73,7 +73,7 @@ $(function () {
                 for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
                     singleLanguageLines.push(totalLines[lineNr]);
                 }
-                songPartArray.push(singleLanguageLines.toString());
+                songPartArray.push(singleLanguageLines.join(''));
             }
             return songPartArray;
         }
@@ -108,14 +108,14 @@ $(function () {
         function displayArrayOfObjects(array) {
             var returnString = "";
             array.forEach(function (el) {
-                returnString += JSON.stringify(el) + '<br>';
+                returnString += JSON.stringify(el);
             });
             $('#partial-output').html(returnString);
         }
 
         displayArrayOfObjects([songTextObject]);
         // displayArrayOfObjects([metaData]);
-        $('#total-output').html(rawFile.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+        $('#total-output').html(rawFile);
     }
 
     function measurePerformanceOfFunction(functionToMeasure, functionParameter) {
