@@ -28,35 +28,39 @@ $(function () {
                 return metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
             }
 
-            function convertBase64ChordsInto(encoding) {
-                metaDataObject.Chords = new Buffer(metaDataObject.Chords, 'base64').toString(encoding)
+            function buildArrayOfChordObjects(metaDataObject) {
+
+                function convertBase64ChordsInto(encoding) {
+                    return new Buffer(metaDataObject.Chords, 'base64').toString(encoding)
+                }
+
+                function buildChordObject(lineArray) {
+                    return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": lineArray[2] };
+                }
+
+                function buildChordObjectsArrayFrom(songBeamerChords) {
+                    var linesArray = [];
+                    var lines = songBeamerChords.split('\r');
+                    lines.forEach(function (line) {
+                        linesArray.push(buildChordObject(line.split(',')));
+                    });
+                    return linesArray;
+                }
+
+                metaDataObject.Chords = convertBase64ChordsInto('utf8');
+                metaDataObject.Chords = buildChordObjectsArrayFrom(metaDataObject.Chords);
+                return metaDataObject;
+
             }
 
             var metaDataObject = JSON.parse(buildParseableMetaDataString(metaDataStringRaw));
-            convertBase64ChordsInto('utf8');
+            metaDataObject =  buildArrayOfChordObjects(metaDataObject);
+
             return metaDataObject;
         }
 
         return buildMetaDataObject(getMetaDataPart(song));;
     }
-
-    function extractChordObjects(song) {
-
-        function buildChordObject(lineArray) {
-            return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": lineArray[2] };
-        }
-
-        function writeChordsIntoArray(songBeamerChords) {
-            var linesArray = [];
-            var lines = songBeamerChords.split('\r');
-            lines.forEach(function (line) {
-                linesArray.push(buildChordObject(line.split(',')));
-            });
-            return linesArray;
-        }
-
-        return writeChordsIntoArray(metaData.Chords);
-    };
 
     function extractSongPartObjects(song) {
 
@@ -98,9 +102,8 @@ $(function () {
             $('#partial-output').html(returnString);
         }
 
-        // displayArrayOfObjects(chordObjects);
-        displayArrayOfObjects(songPartObjects);
-        // displayArrayOfObjects([metaData]);
+        // displayArrayOfObjects(songPartObjects);
+        displayArrayOfObjects([metaData]);
         $('#total-output').html(rawFile.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
@@ -122,7 +125,6 @@ $(function () {
         if (err) { return console.log(err); }
         rawFile = fileData;
         metaData = extractMetaData(fileData);
-        chordObjects = extractChordObjects(fileData);
         songPartObjects = extractSongPartObjects(fileData);
         if (measurePerformance) {
             metaData = measurePerformanceOfFunction(extractMetaData, fileData);
