@@ -4,9 +4,6 @@ $(function () {
     var fs = require('fs');
 
     var rawFile = "";
-    var chordObjects = [];
-    var songText = [];
-    var metaData = [];
     var song = {}
     var measurePerformance = false;
 
@@ -63,9 +60,8 @@ $(function () {
         return buildMetaDataObject(getMetaDataPart(fileData));;
     }
 
-    function extractSongTextObject(fileData, langCount) {
-        var numberOfLanguages = langCount;
-        function buildSongPartObject(songPart, numberOfLanguages) {
+    function extractSongTextObject(fileData, numberOfLanguages) {
+        function buildSongPartObject(songPart) {
             var songPartArray = []
             var totalLines = songPart.match(/.*\r/g);
             for (var langNr = 0; langNr < numberOfLanguages; langNr++) {
@@ -110,11 +106,12 @@ $(function () {
             array.forEach(function (el) {
                 returnString += JSON.stringify(el);
             });
-            $('#partial-output').html(returnString);
+            $('#partial-output').html(returnString.replace(/(\\r\\n|\\r|\\n)/g, '<br />'));
         }
 
-        displayArrayOfObjects(song.songTexts);
-        // displayArrayOfObjects([metaData]);
+        displayArrayOfObjects([song]);
+        // displayArrayOfObjects([song.metaData]);
+        // displayArrayOfObjects(song.songTexts);
         $('#total-output').html(rawFile);
     }
 
@@ -132,27 +129,20 @@ $(function () {
         return functionToMeasure(functionParameter);
     }
 
+    function buildSong(fileData) {
+        var song = {};
+        song.metaData = extractMetaData(fileData);
+        song.songTexts = extractSongTextObject(fileData, parseInt(song.metaData.LangCount));
+        return song;
+    }
+
     fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
         if (err) { return console.log(err); }
         rawFile = fileData;
-        // metaData = extractMetaData(fileData);
-        // songText = extractSongTextObject(fileData);
-
-        function buildSong(fileData) {
-            var someSong = {};
-            someSong.metaData = extractMetaData(fileData);
-            var numberOfLanguages = parseInt(someSong.metaData.LangCount);
-            someSong.songTexts = extractSongTextObject(fileData, numberOfLanguages);
-            return someSong;
-        }
-
         song = buildSong(fileData);
-        console.log(song);
 
         if (measurePerformance) {
-            metaData = measurePerformanceOfFunction(extractMetaData, fileData);
-            chordObjects = measurePerformanceOfFunction(extractChordObjects, fileData);
-            songText = measurePerformanceOfFunction(extractSongTextObject, fileData);
+            song = measurePerformanceOfFunction(buildSong, fileData);
         }
         displayData();
     });
