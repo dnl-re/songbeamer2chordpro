@@ -7,6 +7,7 @@ $(function () {
     var chordObjects = [];
     var songText = [];
     var metaData = [];
+    var song = {}
     var measurePerformance = false;
 
     function extractMetaData(fileData) {
@@ -62,11 +63,10 @@ $(function () {
         return buildMetaDataObject(getMetaDataPart(fileData));;
     }
 
-    function extractSongTextObject(fileData) {
-
-        function buildSongPartObject(songPart) {
+    function extractSongTextObject(fileData, langCount) {
+        var numberOfLanguages = langCount;
+        function buildSongPartObject(songPart, numberOfLanguages) {
             var songPartArray = []
-            var numberOfLanguages = parseInt(metaData.LangCount);
             var totalLines = songPart.match(/.*\r/g);
             for (var langNr = 0; langNr < numberOfLanguages; langNr++) {
                 var singleLanguageLines = [];
@@ -88,19 +88,19 @@ $(function () {
             return fileData.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(1);
         }
 
-        function buildSongTextObject(songPartsObectsArray) {
-            var songObject = { languages: [] };
-            for (var i = 0; i < metaData.LangCount; i++) {
-                var languageParts = [];
-                songPartsObectsArray.forEach(partArray => languageParts.push(partArray[i]));
-                songObject.languages.push(languageParts);
+        function buildSongTextArray(songPartsObectsArray) {
+            var songTextArray = [];
+            for (var i = 0; i < numberOfLanguages; i++) {
+                var languagePartsArray = [];
+                songPartsObectsArray.forEach(partArray => languagePartsArray.push(partArray[i]));
+                songTextArray.push(languagePartsArray);
             }
-            return songObject;
+            return songTextArray;
         }
 
         var songPartsArray = getSongPartsArray(fileData);
         var songPartsObectsArray = buildSongPartsObectsArray(songPartsArray);
-        return buildSongTextObject(songPartsObectsArray);
+        return buildSongTextArray(songPartsObectsArray);
     }
 
     function displayData() {
@@ -113,7 +113,7 @@ $(function () {
             $('#partial-output').html(returnString);
         }
 
-        displayArrayOfObjects([songText]);
+        displayArrayOfObjects(song.songTexts);
         // displayArrayOfObjects([metaData]);
         $('#total-output').html(rawFile);
     }
@@ -135,8 +135,20 @@ $(function () {
     fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
         if (err) { return console.log(err); }
         rawFile = fileData;
-        metaData = extractMetaData(fileData);
-        songText = extractSongTextObject(fileData);
+        // metaData = extractMetaData(fileData);
+        // songText = extractSongTextObject(fileData);
+
+        function buildSong(fileData) {
+            var someSong = {};
+            someSong.metaData = extractMetaData(fileData);
+            var numberOfLanguages = parseInt(someSong.metaData.LangCount);
+            someSong.songTexts = extractSongTextObject(fileData, numberOfLanguages);
+            return someSong;
+        }
+
+        song = buildSong(fileData);
+        console.log(song);
+
         if (measurePerformance) {
             metaData = measurePerformanceOfFunction(extractMetaData, fileData);
             chordObjects = measurePerformanceOfFunction(extractChordObjects, fileData);
