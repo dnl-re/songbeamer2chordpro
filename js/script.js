@@ -65,7 +65,7 @@ $(function () {
     function extractSongPartObjects(song) {
 
         function buildSongPartObject(songPart) {
-            var songPartObject = {}
+            var songPartArray = []
             var numberOfLanguages = parseInt(metaData.LangCount);
             var totalLines = songPart.match(/.*\r/g);
             for (var langNr = 0; langNr < numberOfLanguages; langNr++) {
@@ -73,12 +73,12 @@ $(function () {
                 for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
                     singleLanguageLines.push(totalLines[lineNr]);
                 }
-                songPartObject["language" + (langNr + 1)] = singleLanguageLines.toString();
+                songPartArray.push(singleLanguageLines.toString());
             }
-            return songPartObject;
+            return songPartArray;
         }
 
-        function buildSongPartsObect(song) {
+        function buildSongPartsObectsArray(song) {
             var songPartObjects = [];
             song.forEach(part => songPartObjects.push(buildSongPartObject(part)));
             return songPartObjects;
@@ -89,7 +89,7 @@ $(function () {
         }
 
         song = getSongPartsArray(song);
-        return buildSongPartsObect(song);
+        return buildSongPartsObectsArray(song);
     }
 
     function displayData() {
@@ -102,8 +102,8 @@ $(function () {
             $('#partial-output').html(returnString);
         }
 
-        // displayArrayOfObjects(songPartObjects);
-        displayArrayOfObjects([metaData]);
+        displayArrayOfObjects(songPartObjects);
+        // displayArrayOfObjects([metaData]);
         $('#total-output').html(rawFile.replace(/(?:\r\n|\r|\n)/g, '<br />'));
     }
 
