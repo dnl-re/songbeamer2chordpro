@@ -5,7 +5,7 @@ $(function () {
 
     var rawFile = "";
     var song = {}
-    var chordProObject = {}
+    var chordPro = {};
     var measurePerformance = false;
 
     function extractMetaData(fileData) {
@@ -100,6 +100,24 @@ $(function () {
         return buildSongTextArray(songPartsObectsArray);
     }
 
+    function separateChordsIntoLanguages(song) {
+        function initializeSeparatedChordsArray() {
+            var separatedChords = []
+            for (var i = 0; i < song.metaData.LangCount; i++) {
+                separatedChords[i] = [];
+            }
+            return separatedChords;
+        }
+
+        function fillSeparatedChordsArray(chord) {
+            if (chord.lineNumber) separatedChords[chord.lineNumber % song.metaData.LangCount].push(chord);
+        }
+
+        var separatedChords = initializeSeparatedChordsArray();
+        song.metaData.Chords.forEach(fillSeparatedChordsArray);
+        return separatedChords;
+    }
+
     function displayData() {
 
         function displayArrayOfObjects(array) {
@@ -121,6 +139,7 @@ $(function () {
         var song = {};
         song.metaData = extractMetaData(fileData);
         song.songTexts = extractSongTextObject(fileData, parseInt(song.metaData.LangCount));
+        song.metaData.Chords = separateChordsIntoLanguages(song);
         return song;
     }
 
