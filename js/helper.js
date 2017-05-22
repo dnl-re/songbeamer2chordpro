@@ -1,3 +1,18 @@
+
+function measurePerformanceOfFunction(functionToMeasure, functionParameter) {
+var loop = 1000;
+var sum = 0;
+for (var i = 0; i <= loop; i++) {
+    var t0 = performance.now();
+    functionToMeasure(functionParameter);
+    var t1 = performance.now();
+    if (i !== 0) sum += (t1 - t0);
+}
+
+console.log('Average time of ' + functionToMeasure.name + ': ', (sum / loop).toFixed(4), 'milliseconds');
+return functionToMeasure(functionParameter);
+}
+
 function JSONstringify(json) {
     if (typeof json != 'string') {
         json = JSON.stringify(json, undefined, '\t');

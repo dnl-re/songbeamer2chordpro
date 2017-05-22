@@ -5,6 +5,7 @@ $(function () {
 
     var rawFile = "";
     var song = {}
+    var chordProObject = {}
     var measurePerformance = false;
 
     function extractMetaData(fileData) {
@@ -114,20 +115,6 @@ $(function () {
         // displayArrayOfObjects([song.metaData]);
         // displayArrayOfObjects(song.songTexts);
         $('#total-output').html(rawFile);
-    }
-
-    function measurePerformanceOfFunction(functionToMeasure, functionParameter) {
-        var loop = 1000;
-        var sum = 0;
-        for (var i = 0; i <= loop; i++) {
-            var t0 = performance.now();
-            functionToMeasure(functionParameter);
-            var t1 = performance.now();
-            if (i !== 0) sum += (t1 - t0);
-        }
-
-        console.log('Average time of ' + functionToMeasure.name + ': ', (sum / loop).toFixed(4), 'milliseconds');
-        return functionToMeasure(functionParameter);
     }
 
     function buildSong(fileData) {
