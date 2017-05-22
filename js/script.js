@@ -105,6 +105,7 @@ $(function () {
             var returnString = "";
             array.forEach(function (el) {
                 returnString += JSON.stringify(el);
+                JSONstringify(el);
             });
             $('#partial-output').html(returnString.replace(/(\\r\\n|\\r|\\n)/g, '<br />'));
         }
