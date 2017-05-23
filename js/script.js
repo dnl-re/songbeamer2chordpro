@@ -119,16 +119,13 @@ $(function () {
     }
 
     function pairingChordsWithSongextsByLanguage(song) {
-        var chords = song.metaData.Chords;
         var newSongTexts = [];
-        var numberOfLanguages = song.metaData.LangCount;
-        var songTexts = song.songTexts;
 
-        for (var i = 0; i < numberOfLanguages; i++) {
-            var songLanguageObject = {};
-            songLanguageObject.chords = chords[i];
-            songLanguageObject.songText = song.songTexts[i];
-            newSongTexts.push(songLanguageObject);
+        for (var i = 0; i < song.metaData.LangCount; i++) {
+            newSongTexts.push(songLanguageObject = {
+                'chords': song.metaData.Chords[i],
+                'songText': song.songTexts[i]
+            });
         }
 
         delete song.metaData.Chords;
