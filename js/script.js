@@ -70,7 +70,7 @@ $(function () {
                 for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
                     singleLanguageLines.push(totalLines[lineNr]);
                 }
-                songPartArray.push(singleLanguageLines.join(''));
+                songPartArray.push(singleLanguageLines);
             }
             return songPartArray;
         }
@@ -119,19 +119,37 @@ $(function () {
     }
 
     function pairingChordsWithSongextsByLanguage(song) {
-        var newSongTexts = [];
+        var chordAndTextObjectsArray = [];
 
         for (var i = 0; i < song.metaData.LangCount; i++) {
-            newSongTexts.push(songLanguageObject = {
+            chordAndTextObjectsArray.push(songLanguageObject = {
                 'chords': song.metaData.Chords[i],
                 'songText': song.songTexts[i]
             });
         }
 
         delete song.metaData.Chords;
-        song.songTexts = newSongTexts;
+        song.songTexts = chordAndTextObjectsArray;
         return song;
 
+    }
+
+    function integratingChordsIntoSongtexts(song) {
+
+        function concatenateSongLines(song) {
+
+            var songsArray = [];
+            for (var langNr = 0; langNr < song.metaData.LangCount; langNr++) {
+                var concatenatedSingleLanguageLines = [];
+                song.songTexts[langNr].songText.forEach(part => part.forEach(line => concatenatedSingleLanguageLines.push(line)));
+                songsArray[langNr] = concatenatedSingleLanguageLines;
+            }           
+            song.songTexts = songsArray;
+            return song;
+        }
+
+        song = concatenateSongLines(song);
+        return song;
     }
 
     function displayData() {
@@ -157,6 +175,7 @@ $(function () {
         song.songTexts = extractSongTextObject(fileData, parseInt(song.metaData.LangCount));
         song.metaData.Chords = separateChordsIntoLanguages(song);
         song = pairingChordsWithSongextsByLanguage(song);
+        song = integratingChordsIntoSongtexts(song);
         return song;
     }
 
