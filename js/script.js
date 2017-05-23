@@ -146,7 +146,30 @@ $(function () {
             return song;
         }
 
+
+        function integrateChords(song) {
+
+            var newChordProSongTexts = []   ;
+            function integrateChordsIntoSingleChordProSongText(chordAndTextObject) {
+                chordProTextLinesArray = chordAndTextObject.songText
+
+                function addChordToLine(chord) {
+                    var lineNumber = Math.ceil(chord.lineNumber / song.metaData.LangCount);
+                    chordProTextLinesArray[lineNumber] += '[' + chord.chord + ']';
+                }
+
+                chordAndTextObject.chords.forEach(addChordToLine);
+                newChordProSongTexts.push(chordProTextLinesArray);
+            }
+
+            song.songTexts.forEach(integrateChordsIntoSingleChordProSongText);
+            song.songTexts = newChordProSongTexts;
+            return song;
+
+        }
+
         song = concatenateSongLines(song);
+        song = integrateChords(song)
         return song;
     }
 
