@@ -138,13 +138,11 @@ $(function () {
 
         function concatenateSongLines(song) {
 
-            var songsArray = [];
             for (var langNr = 0; langNr < song.metaData.LangCount; langNr++) {
                 var concatenatedSingleLanguageLines = [];
                 song.songTexts[langNr].songText.forEach(part => part.forEach(line => concatenatedSingleLanguageLines.push(line)));
-                songsArray[langNr] = concatenatedSingleLanguageLines;
+                song.songTexts[langNr].songText = concatenatedSingleLanguageLines;
             }           
-            song.songTexts = songsArray;
             return song;
         }
 
