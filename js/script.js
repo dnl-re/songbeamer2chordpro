@@ -118,6 +118,25 @@ $(function () {
         return separatedChords;
     }
 
+    function pairingChordsWithSongextsByLanguage(song) {
+        var chords = song.metaData.Chords;
+        var newSongTexts = [];
+        var numberOfLanguages = song.metaData.LangCount;
+        var songTexts = song.songTexts;
+
+        for (var i = 0; i < numberOfLanguages; i++) {
+            var songLanguageObject = {};
+            songLanguageObject.chords = chords[i];
+            songLanguageObject.songText = song.songTexts[i];
+            newSongTexts.push(songLanguageObject);
+        }
+
+        delete song.metaData.Chords;
+        song.songTexts = newSongTexts;
+        return song;
+
+    }
+
     function displayData() {
 
         function displayArrayOfObjects(array) {
@@ -140,6 +159,7 @@ $(function () {
         song.metaData = extractMetaData(fileData);
         song.songTexts = extractSongTextObject(fileData, parseInt(song.metaData.LangCount));
         song.metaData.Chords = separateChordsIntoLanguages(song);
+        song = pairingChordsWithSongextsByLanguage(song);
         return song;
     }
 
