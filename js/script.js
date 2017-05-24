@@ -51,9 +51,40 @@ $(function () {
                     else return parseInt(a.lineNumber) - parseInt(b.lineNumber);
                 }
 
+                function filterAndAdjustEmptyChordLines3(chords) {
+                                
+                function clone(obj) {
+                    if (null == obj || "object" != typeof obj) return obj;
+                    var copy = obj.constructor();
+                    for (var attr in obj) {
+                    if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+                    }
+                    return copy;
+                }
+
+                var newChordArray = [];
+                var offset = 0;
+                chords.forEach(function(chord){
+                    var lastElement = newChordArray[newChordArray.length - 1];
+                    var newChord = clone(chord);
+                    if (lastElement) {
+                        if (parseInt(chord.lineNumber) - parseInt(lastElement.lineNumber) + offset > 1) {
+                            newChord.lineNumber = parseInt(lastElement.lineNumber) + 1 - offset;
+                        // offset muss anders gesetzt werden
+                        if (parseInt(chord.lineNumber) - parseInt(lastElement.lineNumber) > 1) offset++;
+                        } else {
+                            newChord.lineNumber = parseInt(chord.lineNumber);
+                        } 
+                    }
+                    newChordArray.push(newChord)
+                });
+                return newChordArray;
+                }
+
                 metaDataObject.Chords = convertBase64ChordsInto('utf8');
                 metaDataObject.Chords = buildChordObjectsArrayFrom(metaDataObject.Chords);
                 metaDataObject.Chords.sort(sortChordObjectsArray);
+                // metaDataObject.Chords = filterAndAdjustEmptyChordLines(metaDataObject.Chords);
                 
                 return metaDataObject;
 
@@ -118,7 +149,7 @@ $(function () {
         }
 
         function fillSeparatedChordsArray(chord) {
-            if (chord.lineNumber) separatedChords[chord.lineNumber % song.metaData.LangCount].push(chord);
+            if (chord.lineNumber) separatedChords[parseInt(chord.lineNumber) % song.metaData.LangCount].push(chord);
         }
 
         var separatedChords = initializeSeparatedChordsArray();
@@ -163,7 +194,7 @@ $(function () {
                 chordProTextLinesArray = chordAndTextObject.songText
 
                 function addChordToLine(chord) {
-                    var lineNumber = Math.ceil(chord.lineNumber / song.metaData.LangCount);
+                    var lineNumber = Math.ceil(parseInt(chord.lineNumber) / song.metaData.LangCount);
                     var line = chordProTextLinesArray[lineNumber];
 
                     function calculateOffsetBecauseOfAlreadyInsertedChords(line) {
