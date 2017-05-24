@@ -34,20 +34,27 @@ $(function () {
                 }
 
                 function buildChordObject(lineArray) {
-                    return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": lineArray[2] };
+                    return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": unescape(encodeURIComponent(lineArray[2])) };
                 }
 
                 function buildChordObjectsArrayFrom(songBeamerChords) {
                     var linesArray = [];
                     var lines = songBeamerChords.split('\r');
                     lines.forEach(function (line) {
-                        linesArray.push(buildChordObject(line.split(',')));
+                        if (line) linesArray.push(buildChordObject(line.split(',')));
                     });
                     return linesArray;
                 }
 
+                function sortChordObjectsArray(a, b) {
+                    if (parseInt(a.lineNumber) == parseInt(b.lineNumber)) return parseInt(a.charPosition) - parseInt(b.charPosition);
+                    else return parseInt(a.lineNumber) - parseInt(b.lineNumber);
+                }
+
                 metaDataObject.Chords = convertBase64ChordsInto('utf8');
                 metaDataObject.Chords = buildChordObjectsArrayFrom(metaDataObject.Chords);
+                metaDataObject.Chords.sort(sortChordObjectsArray);
+                
                 return metaDataObject;
 
             }
@@ -70,6 +77,7 @@ $(function () {
                 for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
                     singleLanguageLines.push(totalLines[lineNr]);
                 }
+                singleLanguageLines.push('---');
                 songPartArray.push(singleLanguageLines);
             }
             return songPartArray;
@@ -130,6 +138,7 @@ $(function () {
 
         delete song.metaData.Chords;
         song.songTexts = chordAndTextObjectsArray;
+        // JSONstringify(song);
         return song;
 
     }
@@ -155,7 +164,24 @@ $(function () {
 
                 function addChordToLine(chord) {
                     var lineNumber = Math.ceil(chord.lineNumber / song.metaData.LangCount);
-                    chordProTextLinesArray[lineNumber] += '[' + chord.chord + ']';
+                    var line = chordProTextLinesArray[lineNumber];
+
+                    function calculateOffsetBecauseOfAlreadyInsertedChords(line) {
+                        if (line === undefined) {
+                            console.error("Line undefined: " + line);
+                        }
+                        var offset = 0;
+                        while (line.indexOf('[') > -1 && line.indexOf(']') > -1) {
+                            offset += line.substring(line.indexOf('['), line.indexOf(']') + 1).length;
+                            line = line.replace(line.slice(line.indexOf('['), line.indexOf(']') + 1), '');
+                        }
+                        return offset;
+                    }
+
+                    var insertPosition = calculateOffsetBecauseOfAlreadyInsertedChords(line) + Math.floor(chord.charPosition);
+                    line = [line.slice(0, insertPosition),   '[' + chord.chord + ']', line.slice(insertPosition)].join('');
+                    chordProTextLinesArray[lineNumber] = line;
+
                 }
 
                 chordAndTextObject.chords.forEach(addChordToLine);
