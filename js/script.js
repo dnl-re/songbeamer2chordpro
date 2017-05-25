@@ -254,10 +254,25 @@ $(function () {
             singleLanguageChordProArray = singleLanguageChordProArray.concat(songTextArray);
             songTexts.push(singleLanguageChordProArray);
         }
+
         song.songTexts.forEach(integrateIntoSingleLanguage);
-        song = songTexts;
+        song = songTexts; // removes metadata returns array of songs by language
 
         return song;
+    }
+
+    function puttingSongTogether(songs) {
+
+        var songsArray = [];
+        
+        function addCorrectLineEndings(song) {
+            var songString = song.reduce((returnString, line) => {return returnString + line.replace('\r', '') + '\r';}, '');
+            songsArray.push(songString);
+        }
+
+        songs.forEach(addCorrectLineEndings)
+
+        return songsArray;
     }
 
     function displayData() {
@@ -285,6 +300,7 @@ $(function () {
         song = pairingChordsWithSongextsByLanguage(song);
         song = integratingChordsIntoSongtexts(song);
         song = integratingMetaData(song);
+        song = puttingSongTogether(song);
         return song;
     }
 
