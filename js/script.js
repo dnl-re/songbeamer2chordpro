@@ -21,7 +21,7 @@ $(function () {
                 return '"' + lineArray[0] + '": "' + lineArray[1] + '"';
             };
 
-            function buildParseableMetaDataString(metaDataStringRaw) {
+            function buildParsableMetaDataString(metaDataStringRaw) {
                 var lines = metaDataStringRaw.match(/#.*/g)
                 var arrayOfMetaDataLines = lines.map(buildStringFromMetaDataLine);
                 return metaDataString = '{' + arrayOfMetaDataLines.toString() + '}';
@@ -70,12 +70,12 @@ $(function () {
 
                     function addOffsetArrayToGetSequentialNumberedChordsArray(chords, offsetArray) {
                         sequentialNumberedChordsArray = [];
-                        function integrateOffsetIntoLinenumber(chord, i) {
+                        function integrateOffsetIntoLineNumber(chord, i) {
                             var newChord = cloneObject(chord);
                             newChord.lineNumber = parseInt(chord.lineNumber) + offsetArray[i];
                             sequentialNumberedChordsArray.push(newChord);
                         }
-                        chords.forEach(integrateOffsetIntoLinenumber);
+                        chords.forEach(integrateOffsetIntoLineNumber);
                         return sequentialNumberedChordsArray;
                     }
 
