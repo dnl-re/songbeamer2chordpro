@@ -5,6 +5,10 @@ This is an electron app in development. You can `git clone` it and start it with
 ## Goal
 The purpose of this app is to convert all .sng files from Songbeamer to the more popular and open .chordpro format (version 5) that can easily be edited and displayed.
 
+## How it works
+
+It decodes the songbeamer chords from base64 and integrates them line by line into the song text. It also takes all songbeamer metadata and turns them as good as possible into chordPro directives. The metadata that has no corresponding directvie will still be included with the prefix `x_` which will be ignored by every chordPro parser, so that no metadata will be lost.
+
 ## Ressources
 
 ### Development
@@ -22,3 +26,43 @@ The purpose of this app is to convert all .sng files from Songbeamer to the more
 * [Many ChordPro Links](http://www.gfapps.com/support/chordprolinks/)
 * [UkeGeeks Sheet converter (Tabs into chordpro)](http://www.ukeskywalker.com/Tools)
 * [Tab Compressor](http://www.ukeskywalker.com/Tools)
+
+## Format
+
+### Songbeamer MetaData
+
+    "LangCount": "2",
+    "Title": "Jesus, Du bleibst für immer gleich",
+    "Author": "Raymond Badham",
+    "Translation": "dt: Evie Sturm",
+    "(c)": "2003 Hillsong Publishing",
+    "Melody": "Raymond Badham",
+    "Songbook": "Feiert Jesus 3_052",
+    "AddCopyrightInfo": "fj3_052<br>deutsch_englisch",
+    "Editor": "SongBeamer 2.25a",
+    "Version": "3",
+    "Format": "F/K//",
+    "TitleFormat": "U",
+    "TitleLang2": "Jesus The Same",
+    "Bible": "Jesaja 9:5-6   Johannes 8:12   Römer 15:13"
+
+### Relevant ChordPro Directives
+
+    {new_song}
+    {title}
+    {subtitle}
+    [NEW] composer
+    [NEW] lyricist
+    [NEW] artist
+    [NEW] album
+    [NEW] copyright
+    [NEW] year
+    [NEW] key
+    [NEW] tempo
+
+    {comment:text} 
+    [NEW] {start_of_verse} 
+    [NEW] {end_of_verse}
+    {chorus} Indicates that the chorus must be played here. By default ChordPro treats this like {comment: Chorus}.
+
+    {x_###: will be ignored with prefix _x} To facilitate using custom extensions for application specific purposes, any directive with a name starting with x_ should be completely ignored by applications 
