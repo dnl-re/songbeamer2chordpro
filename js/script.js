@@ -53,15 +53,6 @@ $(function () {
 
                 function filterAndAdjustEmptyChordLines(chords) {
                                 
-                    function clone(obj) {
-                        if (null == obj || "object" != typeof obj) return obj;
-                        var copy = obj.constructor();
-                        for (var attr in obj) {
-                        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-                        }
-                        return copy;
-                    }
-
                     function buildOffsetArray(chords) {
                         var offsetArray = [0];
                         chords.forEach(function(chord, i) {
@@ -80,7 +71,7 @@ $(function () {
                     function addOffsetArrayToGetSequentialNumberedChordsArray(chords, offsetArray) {
                         sequentialNumberedChordsArray = [];
                         function integrateOffsetIntoLinenumber(chord, i) {
-                            var newChord = clone(chord);
+                            var newChord = cloneObject(chord);
                             newChord.lineNumber = parseInt(chord.lineNumber) + offsetArray[i];
                         sequentialNumberedChordsArray.push(newChord);
                         }
