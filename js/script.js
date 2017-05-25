@@ -230,6 +230,27 @@ $(function () {
         return song;
     }
 
+    function integratingMetaData(song) {
+
+        var songTexts = [];
+
+        function integrateIntoSingleLanguage(songTextArray) {
+            var singleLanguageChordProArray = [];
+            for (var property in song.metaData) {
+                singleLanguageChordProArray.push('{x_' + property + ': ' + song.metaData[property] + '}');
+            }
+            singleLanguageChordProArray.push('');
+            singleLanguageChordProArray = singleLanguageChordProArray.concat(songTextArray);
+            songTexts.push(singleLanguageChordProArray);
+        }
+        song.songTexts.forEach(integrateIntoSingleLanguage);
+        song.songTexts = songTexts;
+
+        delete song.metaData;
+
+        return song;
+    }
+
     function displayData() {
 
         function displayArrayOfObjects(array) {
@@ -254,6 +275,7 @@ $(function () {
         song.metaData.Chords = separateChordsIntoLanguages(song);
         song = pairingChordsWithSongextsByLanguage(song);
         song = integratingChordsIntoSongtexts(song);
+        song = integratingMetaData(song);
         return song;
     }
 
