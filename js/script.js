@@ -51,41 +51,51 @@ $(function () {
                     else return parseInt(a.lineNumber) - parseInt(b.lineNumber);
                 }
 
-                function filterAndAdjustEmptyChordLines3(chords) {
+                function filterAndAdjustEmptyChordLines(chords) {
                                 
-                function clone(obj) {
-                    if (null == obj || "object" != typeof obj) return obj;
-                    var copy = obj.constructor();
-                    for (var attr in obj) {
-                    if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+                    function clone(obj) {
+                        if (null == obj || "object" != typeof obj) return obj;
+                        var copy = obj.constructor();
+                        for (var attr in obj) {
+                        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+                        }
+                        return copy;
                     }
-                    return copy;
-                }
 
-                var newChordArray = [];
-                var offset = 0;
-                chords.forEach(function(chord){
-                    var lastElement = newChordArray[newChordArray.length - 1];
-                    var newChord = clone(chord);
-                    if (lastElement) {
-                        if (parseInt(chord.lineNumber) - parseInt(lastElement.lineNumber) + offset > 1) {
-                            newChord.lineNumber = parseInt(lastElement.lineNumber) + 1 - offset;
-                        // offset muss anders gesetzt werden
-                        if (parseInt(chord.lineNumber) - parseInt(lastElement.lineNumber) > 1) offset++;
-                        } else {
-                            newChord.lineNumber = parseInt(chord.lineNumber);
-                        } 
+                    function buildOffsetArray(chords) {
+                        var offsetArray = [0];
+                        chords.forEach(function(chord, i) {
+                        var prevElement = chords[i - 1];
+                        if (prevElement) {
+                            var actualln = parseInt(chord.lineNumber);
+                            var prevln = parseInt(prevElement.lineNumber);
+                            var lastOffset = offsetArray[offsetArray.length - 1]
+                            if (prevln - actualln >= -1) offsetArray.push(lastOffset);
+                            else offsetArray.push(prevln - actualln + 1 + lastOffset);
+                        }
+                        });
+                        return offsetArray;
                     }
-                    newChordArray.push(newChord)
-                });
-                return newChordArray;
+                    
+                    function addOffsetArrayToGetSequentialNumberedChordsArray(chords, offsetArray) {
+                        sequentialNumberedChordsArray = [];
+                        function integrateOffsetIntoLinenumber(chord, i) {
+                            var newChord = clone(chord);
+                            newChord.lineNumber = parseInt(chord.lineNumber) + offsetArray[i];
+                        sequentialNumberedChordsArray.push(newChord);
+                        }
+                        chords.forEach(integrateOffsetIntoLinenumber);
+                        return sequentialNumberedChordsArray;
+                    }
+
+                    return addOffsetArrayToGetSequentialNumberedChordsArray(chords, buildOffsetArray(chords));
                 }
 
                 metaDataObject.Chords = convertBase64ChordsInto('utf8');
                 metaDataObject.Chords = buildChordObjectsArrayFrom(metaDataObject.Chords);
                 metaDataObject.Chords.sort(sortChordObjectsArray);
-                // metaDataObject.Chords = filterAndAdjustEmptyChordLines(metaDataObject.Chords);
-                
+                metaDataObject.Chords = filterAndAdjustEmptyChordLines(metaDataObject.Chords);
+
                 return metaDataObject;
 
             }
@@ -108,7 +118,6 @@ $(function () {
                 for (var lineNr = langNr; lineNr < totalLines.length; lineNr += numberOfLanguages) {
                     singleLanguageLines.push(totalLines[lineNr]);
                 }
-                singleLanguageLines.push('---');
                 songPartArray.push(singleLanguageLines);
             }
             return songPartArray;
@@ -149,7 +158,7 @@ $(function () {
         }
 
         function fillSeparatedChordsArray(chord) {
-            if (chord.lineNumber) separatedChords[parseInt(chord.lineNumber) % song.metaData.LangCount].push(chord);
+            if (chord.lineNumber !== undefined) separatedChords[parseInt(chord.lineNumber) % song.metaData.LangCount].push(chord);
         }
 
         var separatedChords = initializeSeparatedChordsArray();
@@ -194,7 +203,7 @@ $(function () {
                 chordProTextLinesArray = chordAndTextObject.songText
 
                 function addChordToLine(chord) {
-                    var lineNumber = Math.ceil(parseInt(chord.lineNumber) / song.metaData.LangCount);
+                    var lineNumber = Math.floor(parseInt(chord.lineNumber) / song.metaData.LangCount);
                     var line = chordProTextLinesArray[lineNumber];
 
                     function calculateOffsetBecauseOfAlreadyInsertedChords(line) {
