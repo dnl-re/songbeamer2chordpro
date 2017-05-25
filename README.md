@@ -7,7 +7,7 @@ The purpose of this app is to convert all .sng files from Songbeamer to the more
 
 ## How it works
 
-It decodes the songbeamer chords from base64 and integrates them line by line into the song text. It also takes all songbeamer metadata and turns them as good as possible into chordPro directives. The metadata that has no corresponding directvie will still be included with the prefix `x_` which will be ignored by every chordPro parser, so that no metadata will be lost.
+It decodes the songbeamer chords from base64 and integrates them line by line into the song text. It also takes all songbeamer metadata and turns them as good as possible into chordPro directives. The metadata that has no corresponding directvie will still be included with the prefix `x_` (which will be ignored by every chordPro parser) so that no metadata will be lost.
 
 ## Ressources
 
@@ -75,3 +75,6 @@ It decodes the songbeamer chords from base64 and integrates them line by line in
     "Author" -> {lyricist}
     "Melody" -> {composer}
     "(c)" -> {copyright}
+
+    All other
+    "#####" -> {x_#####}

@@ -241,7 +241,7 @@ $(function () {
                 var chordProDirectives = ['title', 'lyricist', 'composer', 'copyright'];
                 var indexOfDirective = songBeamerDirectives.indexOf(property);
                 if (indexOfDirective > - 1) {
-                    return '{' + chordProDirectives[indexOfDirective]+ ': ' + song.metaData[property] + '}';
+                    return '{' + chordProDirectives[indexOfDirective] + ': ' + song.metaData[property] + '}';
                 } else {
                     return '{x_' + property + ': ' + song.metaData[property] + '}';
                 }
@@ -264,9 +264,9 @@ $(function () {
     function puttingSongTogether(songs) {
 
         var songsArray = [];
-        
+
         function addCorrectLineEndings(song) {
-            var songString = song.reduce((returnString, line) => {return returnString + line.replace('\r', '') + '\r';}, '');
+            var songString = song.reduce((returnString, line) => { return returnString + line.replace('\r', '') + '\r'; }, '');
             songsArray.push(songString);
         }
 
