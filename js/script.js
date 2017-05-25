@@ -244,9 +244,7 @@ $(function () {
             songTexts.push(singleLanguageChordProArray);
         }
         song.songTexts.forEach(integrateIntoSingleLanguage);
-        song.songTexts = songTexts;
-
-        delete song.metaData;
+        song = songTexts;
 
         return song;
     }
@@ -262,7 +260,7 @@ $(function () {
             $('#partial-output').html(returnString.replace(/(\\r\\n|\\r|\\n)/g, '<br />'));
         }
 
-        displayArrayOfObjects([song]);
+        displayArrayOfObjects(song);
         // displayArrayOfObjects([song.metaData]);
         // displayArrayOfObjects(song.songTexts);
         $('#total-output').html(rawFile);
