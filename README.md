@@ -33,6 +33,7 @@ It decodes the Songbeamer chords from base64 and integrates them line by line in
 * [Many ChordPro Links](http://www.gfapps.com/support/chordprolinks/)
 * [UkeGeeks Sheet converter (Tabs into ChordPro)](http://www.ukeskywalker.com/Tools)
 * [Tab Compressor](http://www.ukeskywalker.com/Tools)
+* [Bunch of christian songs - maybe write a converter for this too?](http://www.gospelmusic.org.uk/)
 
 ## Format (for dev purposes)
 
