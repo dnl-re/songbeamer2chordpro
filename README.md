@@ -27,7 +27,7 @@ It decodes the songbeamer chords from base64 and integrates them line by line in
 * [UkeGeeks Sheet converter (Tabs into chordpro)](http://www.ukeskywalker.com/Tools)
 * [Tab Compressor](http://www.ukeskywalker.com/Tools)
 
-## Format
+## Format (for dev purposes)
 
 ### Songbeamer MetaData
 
@@ -51,18 +51,27 @@ It decodes the songbeamer chords from base64 and integrates them line by line in
     {new_song}
     {title}
     {subtitle}
-    [NEW] composer
-    [NEW] lyricist
-    [NEW] artist
-    [NEW] album
-    [NEW] copyright
-    [NEW] year
-    [NEW] key
-    [NEW] tempo
+    composer
+    lyricist
+    artist
+    album
+    copyright
+    year
+    key
+    tempo
 
     {comment:text} 
-    [NEW] {start_of_verse} 
-    [NEW] {end_of_verse}
+    {start_of_verse} 
+    {end_of_verse}
     {chorus} Indicates that the chorus must be played here. By default ChordPro treats this like {comment: Chorus}.
 
     {x_###: will be ignored with prefix _x} To facilitate using custom extensions for application specific purposes, any directive with a name starting with x_ should be completely ignored by applications 
+
+### Converting
+
+    Songbeamer -> ChordPro
+
+    "Title" -> {title}
+    "Author" -> {lyricist}
+    "Melody" -> {composer}
+    "(c)" -> {copyright}

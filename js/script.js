@@ -235,9 +235,20 @@ $(function () {
         var songTexts = [];
 
         function integrateIntoSingleLanguage(songTextArray) {
+
+            function handleMatchingDirectives(property) {
+                var songBeamerDirectives = ['Title', 'Author', 'Melody', '(c)'];
+                var chordProDirectives = ['title', 'lyricist', 'composer', 'copyright'];
+                var indexOfDirective = songBeamerDirectives.indexOf(property);
+                if (indexOfDirective > - 1) {
+                    return '{' + chordProDirectives[indexOfDirective]+ ': ' + song.metaData[property] + '}';
+                } else {
+                    return '{x_' + property + ': ' + song.metaData[property] + '}';
+                }
+            }
             var singleLanguageChordProArray = [];
             for (var property in song.metaData) {
-                singleLanguageChordProArray.push('{x_' + property + ': ' + song.metaData[property] + '}');
+                singleLanguageChordProArray.push(handleMatchingDirectives(property));
             }
             singleLanguageChordProArray.push('');
             singleLanguageChordProArray = singleLanguageChordProArray.concat(songTextArray);
