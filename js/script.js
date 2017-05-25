@@ -51,29 +51,29 @@ $(function () {
                     else return parseInt(a.lineNumber) - parseInt(b.lineNumber);
                 }
 
-                function filterAndAdjustEmptyChordLines(chords) {
-                                
+                function makeChordLineNumbersSequential(chords) {
+                    // Songbeamer includes also empty lines in the line numbers of chords. This removes them.
                     function buildOffsetArray(chords) {
                         var offsetArray = [0];
-                        chords.forEach(function(chord, i) {
-                        var prevElement = chords[i - 1];
-                        if (prevElement) {
-                            var actualln = parseInt(chord.lineNumber);
-                            var prevln = parseInt(prevElement.lineNumber);
-                            var lastOffset = offsetArray[offsetArray.length - 1]
-                            if (prevln - actualln >= -1) offsetArray.push(lastOffset);
-                            else offsetArray.push(prevln - actualln + 1 + lastOffset);
-                        }
+                        chords.forEach(function (chord, i) {
+                            var prevElement = chords[i - 1];
+                            if (prevElement) {
+                                var actualLineNumber = parseInt(chord.lineNumber);
+                                var previousLineNumber = parseInt(prevElement.lineNumber);
+                                var lastOffset = offsetArray[offsetArray.length - 1]
+                                if (previousLineNumber - actualLineNumber >= -1) offsetArray.push(lastOffset);
+                                else offsetArray.push(previousLineNumber - actualLineNumber + 1 + lastOffset);
+                            }
                         });
                         return offsetArray;
                     }
-                    
+
                     function addOffsetArrayToGetSequentialNumberedChordsArray(chords, offsetArray) {
                         sequentialNumberedChordsArray = [];
                         function integrateOffsetIntoLinenumber(chord, i) {
                             var newChord = cloneObject(chord);
                             newChord.lineNumber = parseInt(chord.lineNumber) + offsetArray[i];
-                        sequentialNumberedChordsArray.push(newChord);
+                            sequentialNumberedChordsArray.push(newChord);
                         }
                         chords.forEach(integrateOffsetIntoLinenumber);
                         return sequentialNumberedChordsArray;
@@ -85,14 +85,14 @@ $(function () {
                 metaDataObject.Chords = convertBase64ChordsInto('utf8');
                 metaDataObject.Chords = buildChordObjectsArrayFrom(metaDataObject.Chords);
                 metaDataObject.Chords.sort(sortChordObjectsArray);
-                metaDataObject.Chords = filterAndAdjustEmptyChordLines(metaDataObject.Chords);
+                metaDataObject.Chords = makeChordLineNumbersSequential(metaDataObject.Chords);
 
                 return metaDataObject;
 
             }
 
             var metaDataObject = JSON.parse(buildParseableMetaDataString(metaDataStringRaw));
-            metaDataObject =  buildArrayOfChordObjects(metaDataObject);
+            metaDataObject = buildArrayOfChordObjects(metaDataObject);
 
             return metaDataObject;
         }
@@ -182,14 +182,14 @@ $(function () {
                 var concatenatedSingleLanguageLines = [];
                 song.songTexts[langNr].songText.forEach(part => part.forEach(line => concatenatedSingleLanguageLines.push(line)));
                 song.songTexts[langNr].songText = concatenatedSingleLanguageLines;
-            }           
+            }
             return song;
         }
 
 
         function integrateChords(song) {
 
-            var newChordProSongTexts = []   ;
+            var newChordProSongTexts = [];
             function integrateChordsIntoSingleChordProSongText(chordAndTextObject) {
                 chordProTextLinesArray = chordAndTextObject.songText
 
@@ -210,7 +210,7 @@ $(function () {
                     }
 
                     var insertPosition = calculateOffsetBecauseOfAlreadyInsertedChords(line) + Math.floor(chord.charPosition);
-                    line = [line.slice(0, insertPosition),   '[' + chord.chord + ']', line.slice(insertPosition)].join('');
+                    line = [line.slice(0, insertPosition), '[' + chord.chord + ']', line.slice(insertPosition)].join('');
                     chordProTextLinesArray[lineNumber] = line;
 
                 }
