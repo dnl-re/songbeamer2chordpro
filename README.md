@@ -7,24 +7,31 @@ The purpose of this app is to convert all .sng files from Songbeamer to the more
 
 ## How it works
 
-It decodes the songbeamer chords from base64 and integrates them line by line into the song text. It also takes all songbeamer metadata and turns them as good as possible into chordPro directives. The metadata that has no corresponding directvie will still be included with the prefix `x_` (which will be ignored by every chordPro parser) so that no metadata will be lost.
+It decodes the Songbeamer chords from base64 and integrates them line by line into the song text. It also takes all Songbeamer metadata and turns them as good as possible into ChordPro directives. The metadata that has no corresponding directive will still be included with the prefix `x_` (which will be ignored by every ChordPro parser) so that no metadata will be lost.
 
-## Ressources
+## Todo
+* handle Songbeamer TitleLangX directive
+* decide what to do with multiple languages -> separate files?
+* decide how to handle different parts of a song like chorus, verses and bridges
+* output new file(s) to .chordPro format
+* make frontend nice that files to convert can be chosen
+
+## Resources
 
 ### Development
-* [Chordpro "Specs"](http://www.chordpro.org/chordpro/v50.html)
-* [ChordWP is a plugin to easily edit and publish chordpro sheets on Wordpress](https://wordpress.org/plugins/chordwp/)
-* [Scriptasaurus includes a JavaScrip Library for displaying chordpro sheets](https://github.com/buzcarter/UkeGeeks)
-* [WebChord turns chordpro into HTML (open source)](http://webchord.sourceforge.net/)
-* [Reference implementation of ChrodPro standard - Tool turns ChordPro into sheets (successor of Chordii)](https://github.com/sciurius/chordpro)
+* [ChordPro "Specs"](http://www.chordpro.org/chordpro/v50.html)
+* [ChordWP is a plugin to easily edit and publish ChordPro sheets on Wordpress](https://wordpress.org/plugins/chordwp/)
+* [Scriptasaurus includes a JavaScrip Library for displaying ChordPro sheets](https://github.com/buzcarter/UkeGeeks)
+* [WebChord turns ChordPro into HTML (open source)](http://webchord.sourceforge.net/)
+* [Reference implementation of ChordPro standard - Tool turns ChordPro into sheets (successor of Chordii)](https://github.com/sciurius/chordpro)
 
 ### Editor
 * [ChordSmith Song Sheet Editor](http://www.statistics101.net/chordsmith/)
 * [SongBook ~20 €](http://linkesoft.de/songbook/order.html)
 
-### Other interesting ressources:
+### Other interesting resources:
 * [Many ChordPro Links](http://www.gfapps.com/support/chordprolinks/)
-* [UkeGeeks Sheet converter (Tabs into chordpro)](http://www.ukeskywalker.com/Tools)
+* [UkeGeeks Sheet converter (Tabs into ChordPro)](http://www.ukeskywalker.com/Tools)
 * [Tab Compressor](http://www.ukeskywalker.com/Tools)
 
 ## Format (for dev purposes)
@@ -39,7 +46,7 @@ It decodes the songbeamer chords from base64 and integrates them line by line in
     "Melody": "Raymond Badham",
     "Songbook": "Feiert Jesus 3_052",
     "AddCopyrightInfo": "fj3_052<br>deutsch_englisch",
-    "Editor": "SongBeamer 2.25a",
+    "Editor": "Songbeamer 2.25a",
     "Version": "3",
     "Format": "F/K//",
     "TitleFormat": "U",
