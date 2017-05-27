@@ -247,13 +247,17 @@ $(function () {
                     return '{x_' + property + ': ' + song.metaData[property] + '}';
                 }
             }
-            var singleLanguageChordProArray = [];
-            for (var property in song.metaData) {
-                singleLanguageChordProArray.push(handleMatchingDirectives(property));
+
+            function buildSingleLanguageChordProArray(songTextArray) {
+                var singleLanguageChordProArray = [];
+                for (var property in song.metaData) {
+                    singleLanguageChordProArray.push(handleMatchingDirectives(property));
+                }
+                singleLanguageChordProArray.push('');
+                return singleLanguageChordProArray.concat(songTextArray);
             }
-            singleLanguageChordProArray.push('');
-            singleLanguageChordProArray = singleLanguageChordProArray.concat(songTextArray);
-            songTexts.push(singleLanguageChordProArray);
+
+            songTexts.push(buildSingleLanguageChordProArray(songTextArray));
         }
 
         song.songTexts.forEach(integrateIntoSingleLanguage);
