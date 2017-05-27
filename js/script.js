@@ -37,9 +37,9 @@ $(function () {
                     return { "charPosition": lineArray[0], "lineNumber": lineArray[1], "chord": unescape(encodeURIComponent(lineArray[2])) };
                 }
 
-                function buildChordObjectsArrayFrom(songBeamerChords) {
+                function buildChordObjectsArrayFrom(songbeamerChords) {
                     var linesArray = [];
-                    var lines = songBeamerChords.split('\r');
+                    var lines = songbeamerChords.split('\r');
                     lines.forEach(function (line) {
                         if (line) linesArray.push(buildChordObject(line.split(',')));
                     });
@@ -91,7 +91,7 @@ $(function () {
 
             }
 
-            var metaDataObject = JSON.parse(buildParseableMetaDataString(metaDataStringRaw));
+            var metaDataObject = JSON.parse(buildParsableMetaDataString(metaDataStringRaw));
             metaDataObject = buildArrayOfChordObjects(metaDataObject);
 
             return metaDataObject;
@@ -114,7 +114,7 @@ $(function () {
             return songPartArray;
         }
 
-        function buildSongPartsObectsArray(songPartsArray) {
+        function buildSongPartsObjectsArray(songPartsArray) {
             var songPartObjects = [];
             songPartsArray.forEach(part => songPartObjects.push(buildSongPartObject(part)));
             return songPartObjects;
@@ -124,19 +124,19 @@ $(function () {
             return fileData.replace(/([^-]--\r\n)|([^-]---\r\n)/g, '---').split('---').splice(1);
         }
 
-        function buildSongTextArray(songPartsObectsArray) {
+        function buildSongTextArray(songPartsObjectsArray) {
             var songTextArray = [];
             for (var i = 0; i < numberOfLanguages; i++) {
                 var languagePartsArray = [];
-                songPartsObectsArray.forEach(partArray => languagePartsArray.push(partArray[i]));
+                songPartsObjectsArray.forEach(partArray => languagePartsArray.push(partArray[i]));
                 songTextArray.push(languagePartsArray);
             }
             return songTextArray;
         }
 
         var songPartsArray = getSongPartsArray(fileData);
-        var songPartsObectsArray = buildSongPartsObectsArray(songPartsArray);
-        return buildSongTextArray(songPartsObectsArray);
+        var songPartsObjectsArray = buildSongPartsObjectsArray(songPartsArray);
+        return buildSongTextArray(songPartsObjectsArray);
     }
 
     function separateChordsIntoLanguages(song) {
@@ -237,9 +237,9 @@ $(function () {
         function integrateIntoSingleLanguage(songTextArray) {
 
             function handleMatchingDirectives(property) {
-                var songBeamerDirectives = ['Title', 'Author', 'Melody', '(c)'];
+                var songbeamerDirectives = ['Title', 'Author', 'Melody', '(c)'];
                 var chordProDirectives = ['title', 'lyricist', 'composer', 'copyright'];
-                var indexOfDirective = songBeamerDirectives.indexOf(property);
+                var indexOfDirective = songbeamerDirectives.indexOf(property);
                 if (indexOfDirective > - 1) {
                     return '{' + chordProDirectives[indexOfDirective] + ': ' + song.metaData[property] + '}';
                 } else {
