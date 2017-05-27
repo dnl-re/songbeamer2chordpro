@@ -12,8 +12,11 @@ It decodes the Songbeamer chords from base64 and integrates them line by line in
 ## Todo
 * &#128504; handle Songbeamer TitleLangX directive
 * &#10146; output new file(s) to .chordPro format
-* make frontend nice that files to convert can be chosen
-* decide how to handle different parts of a song like chorus, verses and bridges
+* Integrate VueJS from electron template for frontend (see [github project](https://github.com/SimulatedGREG/electron-vue) and its [doc](https://simulatedgreg.gitbooks.io/electron-vue/content/en/))
+* Make frontend for selecting input and output file (-path) and for song previewing
+* Set up project building and unit testing on [Travis CI](https://travis-ci.org/)
+* Write some unit tests
+* investigate and decide how to handle different parts of a song like chorus, verses and bridges
 
 ## Resources
 
