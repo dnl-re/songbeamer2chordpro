@@ -235,10 +235,14 @@ $(function () {
 
         var songTexts = [];
 
-        function integrateIntoSingleLanguage(songTextArray) {
+        function integrateIntoSingleLanguage(songTextArray, languageNumber) {
 
             function handleMatchingDirectives(property) {
                 var songbeamerDirectives = ['Title', 'Author', 'Melody', '(c)'];
+                if (languageNumber > 0) {
+                    // prepares matching different language titles to title directive
+                    songbeamerDirectives[0] = 'TitleLang' + (languageNumber + 1);
+                }
                 var chordProDirectives = ['title', 'lyricist', 'composer', 'copyright'];
                 var indexOfDirective = songbeamerDirectives.indexOf(property);
                 if (indexOfDirective > - 1) {
@@ -261,7 +265,7 @@ $(function () {
         }
 
         song.songTexts.forEach(integrateIntoSingleLanguage);
-        song = songTexts; // removes metadata returns array of songs by language
+        song = songTexts; // removes metadata, returns array of songs by language
 
         return song;
     }
