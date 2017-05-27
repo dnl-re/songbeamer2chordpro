@@ -158,7 +158,7 @@ $(function () {
         return separatedChords;
     }
 
-    function pairingChordsWithSongextsByLanguage(song) {
+    function pairingChordsWithSongTextsByLanguage(song) {
         var chordAndTextObjectsArray = [];
 
         for (var i = 0; i < song.metaData.LangCount; i++) {
@@ -175,7 +175,7 @@ $(function () {
 
     }
 
-    function integratingChordsIntoSongtexts(song) {
+    function integratingChordsIntoSongTexts(song) {
 
         function concatenateSongLines(song) {
 
@@ -298,8 +298,8 @@ $(function () {
         song.metaData = extractMetaData(fileData);
         song.songTexts = extractSongTextObject(fileData, parseInt(song.metaData.LangCount));
         song.metaData.Chords = separateChordsIntoLanguages(song);
-        song = pairingChordsWithSongextsByLanguage(song);
-        song = integratingChordsIntoSongtexts(song);
+        song = pairingChordsWithSongTextsByLanguage(song);
+        song = integratingChordsIntoSongTexts(song);
         song = integratingMetaData(song);
         song = puttingSongTogether(song);
         return song;
