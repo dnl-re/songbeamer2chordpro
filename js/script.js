@@ -78,7 +78,8 @@ $(function () {
                         chords.forEach(integrateOffsetIntoLineNumber);
                         return sequentialNumberedChordsArray;
                     }
-
+                    // First calculates an Array with negative offsets and then adds those offsets to 
+                    // the corresponding line numbers to get sequential line numbers w/o empty lines
                     return addOffsetArrayToGetSequentialNumberedChordsArray(chords, buildOffsetArray(chords));
                 }
 
