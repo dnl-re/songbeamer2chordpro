@@ -313,14 +313,33 @@ $(function () {
         return song;
     }
 
+    function getDirectiveValueFromSong(singleSong, directive) {
+        var value = '';
+        singleSong.split('}').forEach(line => {
+            if (line.substring(line.indexOf('{') + 1, line.indexOf(':')) == directive) {
+                value = line.substring(line.indexOf(':') + 2);
+            }
+        });
+        return value;
+    }
+
+    function exportSong(song) {
+        song.forEach(singleSong => {
+            var fileName = getDirectiveValueFromSong(singleSong, 'title').replace(/\s/g, '_') + '.chordpro';
+            fs.writeFile(fileName, singleSong, (err) => {
+                if (err) throw err;
+                console.log('Successfully exported song to ' + fileName)
+            });
+        })
+    }
+
     fs.readFile(__dirname + '/input.sng', 'binary', function (err, fileData) {
         if (err) { return console.log(err); }
         rawFile = fileData;
         song = buildSong(fileData);
+        exportSong(song);
 
-        if (measurePerformance) {
-            song = measurePerformanceOfFunction(buildSong, fileData);
-        }
+        if (measurePerformance) song = measurePerformanceOfFunction(buildSong, fileData);
         displayData();
     });
 });
